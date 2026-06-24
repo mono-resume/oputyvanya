@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анкета кандидата — monobank</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700&family=Raleway:wght@700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #1a1a1a;
+  --gray:    #f5f5f5;
+  --border:  #e2e2e2;
+  --accent:  #f5a623;
+  --text:    #1a1a1a;
+  --muted:   #888;
+  --r:       14px;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: #efefef;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 16px 80px;
+  color: var(--text);
+}
+
+/* ── Logo ── */
+.header {
+  width: 100%;
+  max-width: 660px;
+  margin-bottom: 30px;
+  text-align: right;
+}
+.mono-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-decoration: none;
+}
+.mono-wordmark {
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.mono-tagline {
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Progress ── */
+.progress-wrap {
+  width: 100%;
+  max-width: 660px;
+  margin-bottom: 22px;
+}
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.progress-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--black);
+  border-radius: 3px;
+  transition: width 0.42s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+
+/* ── Card ── */
+.card {
+  width: 100%;
+  max-width: 660px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* ── Steps ── */
+.step { display: none; padding: 36px 40px 28px; animation: fadeUp .3s ease; }
+.step.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Welcome screen ── */
+#step0 {
+  padding: 48px 40px 36px;
+  text-align: center;
+}
+.welcome-emoji {
+  font-size: 56px;
+  margin-bottom: 20px;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+.welcome-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--black);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.welcome-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.step-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .9px;
+  margin-bottom: 10px;
+}
+.step-badge-num {
+  width: 22px; height: 22px;
+  background: var(--black); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+}
+.step-q {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px; font-weight: 700; color: var(--black);
+  margin-bottom: 5px; line-height: 1.35;
+}
+.step-hint { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.6; }
+
+/* ── Fields ── */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea {
+  width: 100%;
+  font-family: 'Lato', sans-serif;
+  font-size: 15px; color: var(--text);
+  background: var(--gray);
+  border: 2px solid var(--border);
+  border-radius: var(--r);
+  padding: 13px 16px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+  resize: none;
+}
+input:focus, textarea:focus {
+  border-color: var(--black);
+  background: #fafafa;
+  box-shadow: 0 0 0 3px rgba(26,26,26,.08);
+}
+input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.09); }
+.errmsg { font-size: 12px; color: #ef4444; font-weight: 700; margin-top: 6px; display: none; }
+.errmsg.on { display: block; }
+
+/* ── Spec grid (PC) ── */
+.spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:500px){.spec-grid{grid-template-columns:1fr;}}
+.spec-lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+
+/* ── number field compact ── */
+.num-input-wrap { position: relative; }
+.num-input-wrap input[type="number"] {
+  -moz-appearance: textfield;
+  padding-right: 42px;
+}
+.num-input-wrap input[type="number"]::-webkit-outer-spin-button,
+.num-input-wrap input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.num-unit {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; font-weight: 700; color: var(--muted); pointer-events: none;
+}
+
+/* ── Storage type toggle ── */
+.storage-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.storage-opt {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--gray); border: 2px solid var(--border);
+  border-radius: var(--r); padding: 12px 16px;
+  cursor: pointer; user-select: none;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.storage-opt:hover { border-color: #bbb; }
+.storage-opt input { display: none; }
+.storage-opt.sel {
+  border-color: var(--black); background: #fafafa;
+  box-shadow: 0 0 0 3px rgba(26,26,26,.07);
+}
+.storage-dot {
+  width: 18px; height: 18px; flex-shrink: 0;
+  border-radius: 4px; border: 2px solid var(--border);
+  background: #fff;
+  transition: all .18s; position: relative;
+}
+.storage-opt.sel .storage-dot { border-color: var(--black); background: var(--black); }
+.storage-opt.sel .storage-dot::after {
+  content: ''; position: absolute; top: 2px; left: 5px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff; border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+.storage-opt-lbl { font-size: 14px; font-weight: 700; }
+
+/* ── Radio cards ── */
+.opt-list { display: flex; flex-direction: column; gap: 9px; }
+.opt-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--gray); border: 2px solid var(--border);
+  border-radius: var(--r); padding: 13px 16px;
+  cursor: pointer; user-select: none;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.opt-item:hover { border-color: #bbb; }
+.opt-item input { display: none; }
+.opt-item.sel {
+  border-color: var(--black); background: #fafafa;
+  box-shadow: 0 0 0 3px rgba(26,26,26,.07);
+}
+.opt-dot {
+  width: 19px; height: 19px; flex-shrink: 0;
+  border-radius: 50%; border: 2px solid var(--border);
+  background: #fff; margin-top: 2px;
+  transition: all .18s; position: relative;
+}
+.opt-item.sel .opt-dot { border-color: var(--black); background: var(--black); }
+.opt-item.sel .opt-dot::after {
+  content: ''; position: absolute; top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  width: 6px; height: 6px; background: #fff; border-radius: 50%;
+}
+.opt-lbl { font-size: 14px; font-weight: 600; line-height: 1.45; }
+.opt-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Backup ── */
+.backup-head { display: grid; grid-template-columns: 1fr 86px 28px; gap: 10px; margin-bottom: 4px; }
+.backup-list { display: flex; flex-direction: column; gap: 9px; }
+.backup-row { display: grid; grid-template-columns: 1fr 86px 28px; gap: 10px; align-items: center; }
+.backup-row input[type="number"] {
+  width: 86px;
+  font-family: 'Lato', sans-serif;
+  font-size: 15px; color: var(--text);
+  background: var(--gray); border: 2px solid var(--border);
+  border-radius: var(--r); padding: 13px 10px;
+  outline: none; transition: border-color .2s;
+  text-align: center; -moz-appearance: textfield;
+}
+.backup-row input[type="number"]::-webkit-outer-spin-button,
+.backup-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.backup-row input[type="number"]:focus { border-color: var(--black); background: #fafafa; }
+.add-row-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; background: none;
+  border: 2px dashed var(--border); border-radius: var(--r); padding: 11px;
+  font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--muted); cursor: pointer;
+  transition: border-color .18s, color .18s; margin-top: 4px;
+}
+.add-row-btn:hover { border-color: var(--black); color: var(--black); }
+.no-backup-row {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 13px; color: var(--muted); cursor: pointer; margin-top: 10px;
+}
+.no-backup-row input { width: 16px; height: 16px; accent-color: var(--black); cursor: pointer; }
+
+/* ── Char counter ── */
+.cc { text-align: right; font-size: 11px; color: var(--muted); margin-top: 5px; }
+.cc.warn { color: #f59e0b; }
+.cc.over { color: #ef4444; }
+
+/* ── Footer ── */
+.footer-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 40px 26px;
+  border-top: 1px solid var(--border);
+}
+.btn-back {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 2px solid var(--border);
+  border-radius: 40px; padding: 10px 20px;
+  font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700;
+  color: var(--text); cursor: pointer;
+  transition: border-color .18s;
+}
+.btn-back:hover { border-color: var(--black); }
+.btn-next {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--black); color: #fff;
+  border: none; border-radius: 40px; padding: 12px 28px;
+  font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .18s, box-shadow .2s;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.18);
+}
+.btn-next:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+.btn-next:disabled { background: #aaa; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-next svg, .btn-back svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+/* ── Speed Test ── */
+.speed-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 20px; }
+.speed-card {
+  background: var(--gray); border: 2px solid var(--border);
+  border-radius: var(--r); padding: 14px 10px; text-align: center;
+  transition: border-color .2s;
+}
+.speed-card.active { border-color: var(--black); }
+.speed-card-lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+.speed-card-val { font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 800; color: var(--black); line-height: 1; }
+.speed-card-unit { font-size: 11px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.speed-progress-wrap { margin-bottom: 16px; }
+.speed-progress-label { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.speed-progress-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.speed-progress-fill { height: 100%; background: var(--black); border-radius: 3px; width: 0%; transition: width .25s linear; }
+.speed-status { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 16px; min-height: 20px; transition: color .2s; }
+.speed-status.running { color: var(--black); font-weight: 600; }
+.speed-status.done    { color: #16a34a; font-weight: 700; }
+.btn-speed {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: var(--black); color: #fff;
+  border: none; border-radius: var(--r); padding: 14px 20px;
+  font-family: 'Lato', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: background .2s, transform .18s; margin-bottom: 6px;
+}
+.btn-speed:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+.btn-speed:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+/* ── Typing Test ── */
+.typing-wrap { margin-top: 8px; }
+
+.typing-stats-top {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-bottom: 14px;
+}
+.typing-stat-card {
+  background: var(--gray); border: 2px solid var(--border);
+  border-radius: var(--r); padding: 10px 12px; text-align: center;
+}
+.typing-stat-lbl { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 3px; }
+.typing-stat-val { font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 800; color: var(--black); line-height: 1; }
+.typing-stat-unit { font-size: 10px; color: var(--muted); font-weight: 600; }
+
+.typing-text-area {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 24px 26px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 210px;
+  cursor: text;
+  scrollbar-width: none;
+}
+.typing-text-area::-webkit-scrollbar { display: none; }
+.typing-text-area.active { box-shadow: 0 2px 20px rgba(0,0,0,0.13); }
+
+.typing-text-inner {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.75;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.typing-hidden-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+  z-index: 3;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.typing-word-done    { color: #2ecc71; }
+.typing-word-err     { color: #e74c3c; text-decoration: underline wavy #e74c3c; text-decoration-skip-ink: none; }
+.typing-word-current { color: #1a1a1a; }
+.typing-word-pending { color: #bbb; }
+.typing-ch-done      { color: #2ecc71; }
+.typing-ch-pending   { color: #bbb; }
+.typing-cursor {
+  display: inline-block;
+  width: 0;
+  border-left: 2px solid #1a1a1a;
+  height: 1.1em;
+  vertical-align: text-bottom;
+  margin-right: 1px;
+  animation: tcblink .7s step-start infinite;
+}
+@keyframes tcblink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.typing-overlay-hint {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 15px; font-weight: 600; color: var(--muted);
+  background: rgba(255,255,255,.9);
+  border-radius: 16px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.typing-timer-bar {
+  height: 3px; background: var(--border); border-radius: 2px;
+  overflow: hidden; margin-top: 10px;
+}
+.typing-timer-fill {
+  height: 100%; background: var(--black); border-radius: 2px;
+  transition: width .1s linear; width: 100%;
+}
+.typing-status { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; min-height: 18px; }
+.typing-status.running { color: var(--black); font-weight: 600; }
+.typing-status.done    { color: #16a34a; font-weight: 700; }
+
+.btn-typing {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: var(--black); color: #fff;
+  border: none; border-radius: var(--r); padding: 13px 20px;
+  font-family: 'Lato', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: background .2s, transform .18s;
+  margin-top: 14px;
+}
+.btn-typing:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+.btn-typing:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+.typing-stats { display: none; }
+
+/* ── Thank you ── */
+#thankyou {
+  display: none; width: 100%; max-width: 660px;
+  background: #fff; border-radius: 22px;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  padding: 56px 40px 48px; text-align: center;
+}
+.ty-cat { font-size: 64px; margin-bottom: 18px; animation: popIn .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+#thankyou h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 26px; font-weight: 800; color: var(--black); margin-bottom: 10px;
+}
+
+.sending-msg { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 18px; }
+
+/* ── Loading overlay ── */
+#loadingOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(239,239,239,.85);
+  align-items: center; justify-content: center;
+  z-index: 999; flex-direction: column; gap: 14px;
+  font-family: 'Lato', sans-serif; font-size: 15px; font-weight: 700; color: var(--muted);
+}
+#loadingOverlay.on { display: flex; }
+.loader-dot {
+  width: 10px; height: 10px; background: var(--black);
+  border-radius: 50%; display: inline-block;
+  animation: dotPulse 1s ease-in-out infinite;
+}
+.loader-dot:nth-child(2) { animation-delay: .15s; }
+.loader-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes dotPulse { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
+
+@media(max-width:520px){
+  .step { padding: 26px 18px 22px; }
+  .footer-nav { padding: 14px 18px 20px; }
+  #thankyou { padding: 40px 18px; }
+  #step0 { padding: 36px 18px 28px; }
+  .storage-row { grid-template-columns: 1fr; }
+  .typing-stats { grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading overlay (поки завантажуємо конфіг) -->
+<div id="loadingOverlay">
+  <div style="display:flex;gap:6px">
+    <span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span>
+  </div>
+  <span>Завантажуємо анкету…</span>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <a class="mono-logo">
+    <span class="mono-wordmark">monobank</span>
+    <span class="mono-tagline">Universal Bank</span>
+  </a>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-meta">
+    <span id="pLabel">Крок 1 з …</span>
+    <span id="pPct">0%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="pFill"></div>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card" id="formCard">
+
+  <!-- 0. Привітальний екран -->
+  <div class="step active" id="step0">
+    <div class="welcome-emoji">👋</div>
+    <div class="welcome-title">Привіт! Раді бачити тебе</div>
+    <div class="welcome-sub">Перед нашою зустріччю просимо заповнити коротку анкету — це допоможе нам краще підготуватись до розмови і зробити її максимально корисною для тебе.</div>
+  </div>
+
+  <!-- Q: name -->
+  <div class="step" id="stepQ_name" data-qid="name">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_name">1</div>Особисті дані</div>
+    <div class="step-q">Вкажіть ваше прізвище, ім'я та по батькові</div>
+    <div class="step-hint">Введіть ПІБ повністю.</div>
+    <input type="text" id="q_name" placeholder="Коваленко Тетяна Іванівна" autocomplete="name">
+    <div class="errmsg" id="e_name">Будь ласка, введіть ваше ПІБ</div>
+  </div>
+
+  <!-- Q: email -->
+  <div class="step" id="stepQ_email" data-qid="email">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_email">2</div>Контакти</div>
+    <div class="step-q">Вкажіть ваш email</div>
+    <div class="step-hint">Ми надішлемо деталі на цю адресу.</div>
+    <input type="email" id="q_email" placeholder="example@gmail.com" autocomplete="email">
+    <div class="errmsg" id="e_email">Будь ласка, введіть коректний email</div>
+  </div>
+
+  <!-- Q: facts -->
+  <div class="step" id="stepQ_facts" data-qid="facts">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_facts">3</div>Про вас</div>
+    <div class="step-q">Розкажіть нам 5 цікавих фактів про себе</div>
+    <div class="step-hint">Хобі, досягнення, захоплення — усе, що вважаєте цікавим. Можна нумерувати, головне 5 фактів.</div>
+    <textarea id="q_facts" rows="7" placeholder="Наприклад:&#10;Люблю подорожувати та вже відвідала 12 країн&#10;Захоплююсь фотографією&#10;Маю кота на ім'я Борщ&#10;Навчаюся грати на гітарі&#10;Обожнюю готувати азійську кухню" maxlength="2000"></textarea>
+    <div class="cc" id="cc_facts">0 / 2000</div>
+    <div class="errmsg" id="e_facts">Будь ласка, напишіть факти про себе</div>
+  </div>
+
+  <!-- Q: spec -->
+  <div class="step" id="stepQ_spec" data-qid="spec">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_spec">4</div>Освіта</div>
+    <div class="step-q">Вкажіть назву спеціальності на яку навчаєтесь/лись</div>
+    <div class="step-hint">На яку спеціальність ви навчаєтесь або навчались?</div>
+    <input type="text" id="q_spec" placeholder="Напр.: Комп'ютерні науки, Фінанси, Менеджмент…">
+    <div class="errmsg" id="e_spec">Будь ласка, вкажіть спеціальність</div>
+  </div>
+
+  <!-- Q: job_period — На який період шукаєте роботу -->
+  <div class="step" id="stepQ_job_period" data-qid="job_period">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_job_period">6</div>Плани</div>
+    <div class="step-q">На який період ви зараз шукаєте роботу?</div>
+    <div class="step-hint">Оберіть найбільш відповідний варіант.</div>
+    <div class="opt-list" id="jp_list">
+      <label class="opt-item" onclick="pickRadio(this,'jp')">
+        <input type="radio" name="jp" value="1 місяць">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">1 місяць</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'jp')">
+        <input type="radio" name="jp" value="До 3-х місяців">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">До 3-х місяців</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'jp')">
+        <input type="radio" name="jp" value="± 6 місяців">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">± 6 місяців</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'jp')">
+        <input type="radio" name="jp" value="Більше 1-го року">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Більше 1-го року</div></div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_jp">Будь ласка, оберіть один із варіантів</div>
+  </div>
+
+  <!-- Q: stress — Робочі ситуації що викликають напруження -->
+  <div class="step" id="stepQ_stress" data-qid="stress">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_stress">7</div>Стресостійкість</div>
+    <div class="step-q">Опишіть робочі ситуації, що викликають у вас найбільше емоційне напруження</div>
+    <div class="step-hint">Будьте відвертими — це допомагає нам краще зрозуміти ваш стиль роботи.</div>
+    <textarea id="q_stress" rows="5" placeholder="Ваша відповідь…" maxlength="1500"></textarea>
+    <div class="cc" id="cc_stress">0 / 1500</div>
+    <div class="errmsg" id="e_stress">Будь ласка, напишіть відповідь</div>
+  </div>
+
+  <!-- Q: honesty — Чи можна виправдати людину що заробляє обманом -->
+  <div class="step" id="stepQ_honesty" data-qid="honesty">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_honesty">8</div>Цінності</div>
+    <div class="step-q">Як ви вважаєте, чи можна виправдати людину, котра заробляє обманом?</div>
+    <div class="step-hint">Оберіть варіант, що найбільше відповідає вашій думці.</div>
+    <div class="opt-list" id="hn_list">
+      <label class="opt-item" onclick="pickRadio(this,'hn')">
+        <input type="radio" name="hn" value="Так">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Так</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'hn')">
+        <input type="radio" name="hn" value="Ні">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Ні</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'hn')">
+        <input type="radio" name="hn" value="Залежно від ситуації">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Залежно від ситуації</div></div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_hn">Будь ласка, оберіть один із варіантів</div>
+  </div>
+
+  <!-- Q: quit_reason — Через що ви категорично вирішите звільнитися -->
+  <div class="step" id="stepQ_quit_reason" data-qid="quit_reason">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_quit_reason">9</div>Мотивація</div>
+    <div class="step-q">Через що категорично ви вирішите звільнитися?</div>
+    <div class="step-hint">Назвіть основні причини, які були б для вас неприйнятними.</div>
+    <textarea id="q_quit_reason" rows="5" placeholder="Ваша відповідь…" maxlength="1000"></textarea>
+    <div class="cc" id="cc_quit_reason">0 / 1000</div>
+    <div class="errmsg" id="e_quit_reason">Будь ласка, напишіть відповідь</div>
+  </div>
+
+  <!-- Q: upset_situation — Ситуація що засмутила/роздратувала на минулій роботі -->
+  <div class="step" id="stepQ_upset_situation" data-qid="upset_situation">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_upset_situation">10</div>Досвід</div>
+    <div class="step-q">Розкажіть ситуацію, яка дуже вас засмутила або роздратувала на минулій роботі/навчанні</div>
+    <div class="step-hint">Опишіть ситуацію та як ви з нею впорались.</div>
+    <textarea id="q_upset_situation" rows="6" placeholder="Ваша відповідь…" maxlength="1500"></textarea>
+    <div class="cc" id="cc_upset_situation">0 / 1500</div>
+    <div class="errmsg" id="e_upset_situation">Будь ласка, напишіть відповідь</div>
+  </div>
+
+  <!-- Q: conflict_style — З деякими людьми треба перейти на їхній рівень -->
+  <div class="step" id="stepQ_conflict_style" data-qid="conflict_style">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_conflict_style">11</div>Комунікація</div>
+    <div class="step-q">«З деякими людьми треба перейти на їхній рівень спілкування (на підвищений тон та/або некоректний формат), щоб вони зрозуміли та почули мене»</div>
+    <div class="step-hint">Наскільки ви згодні з цим твердженням?</div>
+    <div class="opt-list" id="cs_list">
+      <label class="opt-item" onclick="pickRadio(this,'cs')">
+        <input type="radio" name="cs" value="Повністю згоден(-на)">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Повністю згоден(-на)</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'cs')">
+        <input type="radio" name="cs" value="Частково згоден(-на)">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Частково згоден(-на)</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'cs')">
+        <input type="radio" name="cs" value="Не згоден(-на)">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Не згоден(-на)</div></div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_cs">Будь ласка, оберіть один із варіантів</div>
+  </div>
+
+  <!-- Q: channel_random — Готовність до рандомного каналу комунікацій -->
+  <div class="step" id="stepQ_channel_random" data-qid="channel_random">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_channel_random">12</div>Умови роботи</div>
+    <div class="step-q">Чи готові ви до рандомного розподілення каналу комунікацій з клієнтом (телефон/чат) після навчання, в рамках потреби компанії?</div>
+    <div class="step-hint">Без можливості зміни вибору.</div>
+    <div class="opt-list" id="cr_list">
+      <label class="opt-item" onclick="pickRadio(this,'cr')">
+        <input type="radio" name="cr" value="Так">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Так</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'cr')">
+        <input type="radio" name="cr" value="Ні">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Ні</div></div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_cr">Будь ласка, оберіть один із варіантів</div>
+  </div>
+
+  <!-- Q: hw — PC specs -->
+  <div class="step" id="stepQ_hw" data-qid="hw">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_hw">13</div>Технічне обладнання</div>
+    <div class="step-q">Характеристики процесора та оперативної пам'яті комп'ютера/ноутбука</div>
+    <div class="step-hint">Вкажіть параметри комп'ютера або ноутбука, на якому плануєте працювати.</div>
+
+    <div style="margin-bottom:14px">
+      <div class="spec-lbl">Процесор (CPU)</div>
+      <input type="text" id="q_cpu" placeholder="Напр.: Intel Core i5-10300H">
+    </div>
+
+    <div class="spec-grid" style="margin-bottom:14px">
+      <div>
+        <div class="spec-lbl">Оперативна пам'ять (ГБ)</div>
+        <div class="num-input-wrap">
+          <input type="number" id="q_ram" placeholder="16" min="1" max="512">
+          <span class="num-unit">ГБ</span>
+        </div>
+      </div>
+      <div>
+        <div class="spec-lbl">Об'єм накопичувача (ГБ)</div>
+        <div class="num-input-wrap">
+          <input type="number" id="q_storage" placeholder="512" min="1" max="99999">
+          <span class="num-unit">ГБ</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="spec-lbl">Тип накопичувача</div>
+      <div class="storage-row">
+        <label class="storage-opt" id="sopt_ssd">
+          <input type="checkbox" id="st_ssd" value="SSD">
+          <div class="storage-dot"></div>
+          <span class="storage-opt-lbl">SSD</span>
+        </label>
+        <label class="storage-opt" id="sopt_hdd">
+          <input type="checkbox" id="st_hdd" value="HDD">
+          <div class="storage-dot"></div>
+          <span class="storage-opt-lbl">HDD</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="errmsg" id="e_hw" style="margin-top:12px">Будь ласка, заповніть усі поля та оберіть тип накопичувача</div>
+  </div>
+
+  <!-- Q: os -->
+  <div class="step" id="stepQ_os" data-qid="os">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_os">14</div>Операційна система</div>
+    <div class="step-q">Тип і версія вашої операційної системи</div>
+    <div class="step-hint">Оберіть тип ОС та вкажіть точну версію.</div>
+    <div class="opt-list" id="os_list" style="margin-bottom:16px">
+      <label class="opt-item" onclick="pickRadio(this,'os')">
+        <input type="radio" name="os" value="Windows">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">🪟 Windows</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'os')">
+        <input type="radio" name="os" value="macOS">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">🍎 macOS</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'os')">
+        <input type="radio" name="os" value="Linux">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">🐧 Linux</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'os')">
+        <input type="radio" name="os" value="Інше">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Інше</div></div>
+      </label>
+    </div>
+    <div class="spec-lbl">Версія ОС</div>
+    <input type="text" id="q_osv" placeholder="Напр.: Windows 11 Pro 23H2, macOS Sonoma 14.4…">
+    <div class="errmsg" id="e_os">Будь ласка, оберіть тип ОС та вкажіть версію</div>
+  </div>
+
+  <!-- Q: backup — Резервне живлення -->
+  <div class="step" id="stepQ_backup" data-qid="backup">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_backup">15</div>Резервне живлення</div>
+    <div class="step-q">Резервні джерела живлення під час відключень</div>
+    <div class="step-hint">Вкажіть усі наявні джерела та приблизний час роботи від кожного.</div>
+
+    <div class="backup-head">
+      <div class="spec-lbl" style="margin:0">Джерело живлення</div>
+      <div class="spec-lbl" style="margin:0;text-align:center">Годин</div>
+      <div></div>
+    </div>
+    <div class="backup-list" id="bpList">
+      <div class="backup-row" id="brow0">
+        <input type="text" id="bp0n" placeholder="Напр.: павербанк 20 000 мАг">
+        <input type="number" id="bp0h" placeholder="год" min="0" max="99" step="0.5">
+        <div></div>
+      </div>
+    </div>
+
+    <button type="button" class="add-row-btn" id="addBpBtn" onclick="addBpRow()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+      Додати ще джерело
+    </button>
+
+    <label class="no-backup-row">
+      <input type="checkbox" id="noBp" onchange="toggleNoBp(this)">
+      <span>Резервних джерел живлення немає</span>
+    </label>
+    <div class="errmsg" id="e_bp">Будь ласка, вкажіть хоча б одне джерело або позначте «немає»</div>
+  </div>
+
+  <!-- Q: internet — Швидкість інтернету -->
+  <div class="step" id="stepQ_internet" data-qid="internet">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_internet">16</div>Інтернет</div>
+    <div class="step-q">Швидкість вашого інтернет-з'єднання</div>
+    <div class="step-hint">Натисніть «Запустити тест» — займе ~20 секунд. Результат збережеться автоматично.</div>
+
+    <div class="speed-cards">
+      <div class="speed-card" id="card_dl">
+        <div class="speed-card-lbl">↓ Завантаження</div>
+        <div><span class="speed-card-val" id="dlVal">—</span><span class="speed-card-unit">Мбіт/с</span></div>
+      </div>
+      <div class="speed-card" id="card_ul">
+        <div class="speed-card-lbl">↑ Вивантаження</div>
+        <div><span class="speed-card-val" id="ulVal">—</span><span class="speed-card-unit">Мбіт/с</span></div>
+      </div>
+      <div class="speed-card" id="card_ping">
+        <div class="speed-card-lbl">Ping</div>
+        <div><span class="speed-card-val" id="pingVal">—</span><span class="speed-card-unit">мс</span></div>
+      </div>
+    </div>
+
+    <div class="speed-progress-wrap" id="speedProgressWrap" style="display:none">
+      <div class="speed-progress-label">
+        <span id="speedProgressLabel">Завантаження…</span>
+        <span id="speedProgressPct">0%</span>
+      </div>
+      <div class="speed-progress-track"><div class="speed-progress-fill" id="speedProgressFill"></div></div>
+    </div>
+
+    <div class="speed-status" id="speedStatus">Готово до вимірювання</div>
+    <button class="btn-speed" id="btnSpeed" onclick="runSpeedTest()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+      Запустити тест
+    </button>
+    <div class="errmsg" id="e_speed">Будь ласка, запустіть тест швидкості</div>
+  </div>
+
+  <!-- Q: typing — Тест швидкості друку -->
+  <div class="step" id="stepQ_typing" data-qid="typing">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_typing">17</div>Швидкість друку</div>
+    <div class="step-q">Практика швидкості друку</div>
+    <div class="step-hint">Наберіть текст нижче якнайшвидше та точніше. Тест 60 секунд. При помилці слово червоніє — введіть правильну букву щоб продовжити.</div>
+
+    <div class="typing-wrap">
+      <!-- Статистика зверху -->
+      <div class="typing-stats-top">
+        <div class="typing-stat-card">
+          <div class="typing-stat-lbl">Час</div>
+          <div class="typing-stat-val" id="typingTime">60<span class="typing-stat-unit">с</span></div>
+        </div>
+        <div class="typing-stat-card">
+          <div class="typing-stat-lbl">Знаків/хв</div>
+          <div class="typing-stat-val" id="typingCPM">0<span class="typing-stat-unit">зн.</span></div>
+        </div>
+        <div class="typing-stat-card">
+          <div class="typing-stat-lbl">Точність</div>
+          <div class="typing-stat-val" id="typingAcc">100<span class="typing-stat-unit">%</span></div>
+        </div>
+      </div>
+
+      <!-- Текстовий блок -->
+      <div class="typing-text-area" id="typingArea">
+        <div class="typing-text-inner" id="typingDisplay"></div>
+        <input class="typing-hidden-input" id="typingInput" type="text"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="typing-overlay-hint" id="typingHint">Клікніть тут і починайте друкувати</div>
+      </div>
+
+      <div class="typing-timer-bar"><div class="typing-timer-fill" id="typingTimerFill"></div></div>
+      <div class="typing-status" id="typingStatus"></div>
+      <button class="btn-typing" id="btnTypingReset" onclick="resetTypingTest()" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Почати ще раз
+      </button>
+    </div>
+    <div class="errmsg" id="e_typing">Будь ласка, завершіть тест друку</div>
+  </div>
+
+  <!-- Q: night_shift — Нічні зміни -->
+  <div class="step" id="stepQ_night_shift" data-qid="night_shift">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_night_shift">18</div>Графік роботи</div>
+    <div class="step-q">Чи готові ви до нічних змін?</div>
+    <div class="step-hint">Графік 2/2 передбачає чергування денних та нічних змін.</div>
+    <div class="opt-list" id="ns_list">
+      <label class="opt-item" onclick="pickRadio(this,'ns')">
+        <input type="radio" name="ns" value="Так">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">Так, готовий(-а)</div>
+          <div class="opt-sub">Можу працювати за графіком 2/2 з нічними змінами</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'ns')">
+        <input type="radio" name="ns" value="Ні">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">Ні, не готовий(-а)</div>
+          <div class="opt-sub">Можу розглядати лише денні зміни</div>
+        </div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_ns">Будь ласка, оберіть один із варіантів</div>
+    <div class="sending-msg" id="sendMsg"></div>
+  </div>
+
+  <!-- Nav -->
+  <div class="footer-nav">
+    <button class="btn-back" id="btnBack" onclick="prev()" tabindex="-1" style="visibility:hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Назад
+    </button>
+    <button class="btn-next" id="btnNext" onclick="next()" tabindex="-1">
+      Почати
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Thank you -->
+<div id="thankyou">
+  <div class="ty-cat">🐱</div>
+  <h2>Дякуємо за відповіді, біжемо читати!</h2>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// КОНФІГУРАЦІЯ — замініть URL на ваш Apps Script GET ендпоінт
+// що повертає JSON: { "name": true, "email": true, ... }
+// Якщо URL порожній або недоступний — показуються всі питання
+// ─────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi94BLNeGVi71qCE-vDsWpeUOV0pe3cM3PW3hk-I-EBStQRfQVViEy7ULpzG-1hOHD/exec';
+const CONFIG_URL = APPS_SCRIPT_URL; // GET ?action=getConfig читає аркуш «Панель керування» → { qid: true/false }
+
+// Всі питання у порядку відображення (qid відповідає data-qid кожного step)
+const ALL_QUESTIONS = [
+  'name', 'email', 'facts', 'spec',
+  'job_period', 'stress', 'honesty', 'quit_reason', 'upset_situation',
+  'conflict_style', 'channel_random',
+  'hw', 'os', 'backup', 'internet', 'typing', 'night_shift'
+];
+
+// Fallback — якщо конфіг недоступний, показуємо всі питання
+let activeQuestions = [...ALL_QUESTIONS];
+
+// Черга активних кроків: [0, stepEl, stepEl, ...] — 0 = welcome
+let stepQueue = [];
+let curIdx = 0; // індекс у stepQueue
+
+// ── Typing test state ──
+let typingDone = false;
+let typingActive = false;
+let typingTimer = null;
+let typingTimeLeft = 60;
+const TYPING_DURATION = 60;
+let typingCharsCorrect = 0;
+let typingCharsTotal = 0;
+let typingPos = 0;
+let typingErrors = 0;
+let typingStarted = false;
+let typingFirstKeyTime = null; // час першого символу
+let _typingResult = null;
+
+const TYPING_TEXTS = [
+  'Скільки у світі морів? Учені налічують 63 моря. Серед них 25 належать до Тихого океану, 16 - до Атлантичного, 11 - до Індійського, 11 - до Північного Льодовитого. Моря є й на Місяці: море Дощів, море Достатку та інші. Місячними морями називають плоскі ділянки планети, розташовані нижче від її поверхні. Вчені вважають, що Земля - це єдина планета Сонячної системи, на якій є вода в рідкому стані',
+  'Перша згадка про японський храм Кійомідзу-дера сягає ще першого століття нашої ери. За роки свого існування він зазнав чимало пограбувань і пожеж, одна з яких у 1200 році перетворила його стіни на попіл. Але до 1633 року храм був відновлений, саме в такому вигляді він і зберігся до наших днів. Кожний, хто відвідав храм, мав пройти ритуальний обряд обмивання чистою водою, якому храм завдячує своєю назвою.',
+  'Більшість стародавніх цивілізацій вірили, що Земля є центром всесвіту, а Сонце та інші планети й зорі обертаються навколо неї. Але у 1543 році вчений і астроном Микола Коперник довів, що Земля обертається навколо Сонця. Щоб здійснити мандрівку навколо Сонця, Землі потрібно 356,25 дня. Цей час ми називаємо роком. Сонце є найближчою до Землі зорею. Його світло й тепло робить можливим життя на планеті.',
+  'Статую Свободи жартома називають найвідомішою леді Америки. Відкриття цього чудового монумента відбулося 28 жовтня 1886 року, а її автором став французький скульптор Фредерік Огюст Бартольді. Величезний внесок у створення статуї Свободи також зробив Гюстав Ейфель, майбутній творець славнозвісної Ейфелевої вежі. Йому вдалося доволі рівномірно розподілити 205 тонн ваги статуї за допомогою сталевого каркаса.',
+  'Майже всі колібрі - справжні денні птахи: люблять спеку і потерпають від холоду. Політ визначає все життя колібрі; жоден птах не літає так. Поки колібрі залишається на одному місці, крила птаха працюють безшумно, коли він швидко просувається вперед, чується різке дзижчання. На землю колібрі спускаються вкрай рідко. Усі види колібрі будують гнізда й відкладають лише по два білуваті й порівняно великі яйця.',
+  'Найбільшими з усіх тварин, що живуть нині на нашій планеті, є кити. Довжина рекордсмена - синього або блакитного кита - становить 25 м, а маса - до 150 т. Як і всі ссавці, кити дихають повітрям за допомогою легенів, годують дитинчат молоком і навіть мають трохи шерсті. Дитинчат синіх китів можна вважати найшвидкорослішими малюками. Щодня довжина їхнього тіла збільшується на 4,5 см, а маса - на 80-100 кг.',
+];
+
+let currentTypingText = '';
+let typingWords = [];       // масив слів
+let typingWordIdx = 0;      // поточне слово
+let typingWordPos = 0;      // позиція всередині слова
+let typingWordErr = false;  // чи є помилка у поточному слові
+
+function initTypingTest() {
+  currentTypingText = TYPING_TEXTS[Math.floor(Math.random() * TYPING_TEXTS.length)];
+  typingWords = currentTypingText.split(' ');
+  typingWordIdx = 0;
+  typingWordPos = 0;
+  typingWordErr = false;
+  typingPos = 0;
+  typingCharsCorrect = 0;
+  typingCharsTotal = 0;
+  typingErrors = 0;
+  typingFirstKeyTime = null;
+  typingTimeLeft = TYPING_DURATION;
+  typingStarted = false;
+  typingActive = false;
+  typingDone = false;
+  _typingResult = null;
+  if (typingTimer) { clearInterval(typingTimer); typingTimer = null; }
+
+  renderTypingText();
+  const hint = document.getElementById('typingHint');
+  if (hint) hint.style.display = '';
+  const inp = document.getElementById('typingInput');
+  if (inp) { inp.value = ''; inp.disabled = false; }
+  document.getElementById('typingTime').innerHTML = typingTimeLeft + '<span class="typing-stat-unit">с</span>';
+  document.getElementById('typingCPM').innerHTML = '0<span class="typing-stat-unit">зн.</span>';
+  document.getElementById('typingAcc').innerHTML = '100<span class="typing-stat-unit">%</span>';
+  document.getElementById('typingTimerFill').style.width = '100%';
+  document.getElementById('typingStatus').className = 'typing-status';
+  document.getElementById('typingStatus').textContent = '';
+  document.getElementById('btnTypingReset').style.display = 'none';
+  err('e_typing', false);
+}
+
+function renderTypingText() {
+  const box = document.getElementById('typingDisplay');
+  let html = '';
+  for (let wi = 0; wi < typingWords.length; wi++) {
+    const word = typingWords[wi];
+    if (wi > 0) html += ' ';
+    if (wi < typingWordIdx) {
+      html += '<span class="typing-word-done">' + word + '</span>';
+    } else if (wi === typingWordIdx) {
+      let inner = '';
+      for (let ci = 0; ci < word.length; ci++) {
+        if (ci === typingWordPos) inner += '<span class="typing-cursor" id="typingCursor"></span>';
+        const cls = ci < typingWordPos ? 'typing-ch-done' : 'typing-ch-pending';
+        inner += '<span class="' + cls + '">' + word[ci] + '</span>';
+      }
+      if (typingWordPos >= word.length) inner += '<span class="typing-cursor" id="typingCursor"></span>';
+      const cls = typingWordErr ? 'typing-word-err' : 'typing-word-current';
+      html += '<span class="' + cls + '">' + inner + '</span>';
+    } else {
+      html += '<span class="typing-word-pending">' + word + '</span>';
+    }
+  }
+  box.innerHTML = html;
+
+  // Скролимо область щоб курсор завжди був видимий
+  const area = document.getElementById('typingArea');
+  const cursor = document.getElementById('typingCursor');
+  if (area && cursor) {
+    const areaRect = area.getBoundingClientRect();
+    const cursorRect = cursor.getBoundingClientRect();
+    const cursorBottom = cursorRect.bottom - areaRect.top + area.scrollTop;
+    const cursorTop = cursorRect.top - areaRect.top + area.scrollTop;
+    const areaHeight = area.clientHeight;
+    const paddingBottom = 20;
+    if (cursorBottom > area.scrollTop + areaHeight - paddingBottom) {
+      area.scrollTop = cursorBottom - areaHeight + paddingBottom + 10;
+    } else if (cursorTop < area.scrollTop + 20) {
+      area.scrollTop = Math.max(0, cursorTop - 20);
+    }
+  }
+}
+
+function renderTypingError() {
+  const box = document.getElementById('typingDisplay');
+  const cur = box.querySelector('.typing-word-current');
+  if (cur) { cur.classList.remove('typing-word-current'); cur.classList.add('typing-word-err'); }
+}
+
+function focusTyping() {
+  if (typingDone) return;
+  const inp = document.getElementById('typingInput');
+  if (inp) inp.focus();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('typingInput');
+  if (!inp) return;
+
+  // Фокус на input — показуємо курсор, ховаємо hint
+  inp.addEventListener('focus', () => {
+    document.getElementById('typingArea').classList.add('active');
+    const hint = document.getElementById('typingHint');
+    if (hint) hint.style.display = 'none';
+  });
+  inp.addEventListener('blur', () => {
+    document.getElementById('typingArea').classList.remove('active');
+    if (!typingStarted && !typingDone) {
+      const hint = document.getElementById('typingHint');
+      if (hint) hint.style.display = '';
+    }
+  });
+
+  inp.addEventListener('keydown', function(e) {
+    if (typingDone) return;
+
+    if (e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      this.value = '';
+      if (!typingStarted || !typingActive) return;
+      const currentWord = typingWords[typingWordIdx];
+      // Пробіл лише якщо слово повністю набране БЕЗ помилок
+      if (typingWordPos === currentWord.length && !typingWordErr) {
+        typingWordIdx++;
+        typingWordPos = 0;
+        typingWordErr = false;
+        if (typingWordIdx >= typingWords.length) { finishTypingTest(); return; }
+        renderTypingText();
+        updateTypingStats();
+      }
+      // При помилці або незакінченому слові — ігноруємо
+      return;
+    }
+
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      this.value = '';
+      return;
+    }
+
+    if (['Tab','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
+         'Shift','Control','Alt','Meta','CapsLock','Escape'].includes(e.key)) {
+      e.preventDefault(); return;
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) { e.preventDefault(); return; }
+
+    // Звичайний символ — обробляємо тут, не чекаємо input event
+    if (e.key.length === 1) {
+      e.preventDefault();
+      this.value = '';
+      if (!typingStarted) startTypingTimer();
+      if (!typingActive) return;
+
+      const typed = e.key;
+      const currentWord = typingWords[typingWordIdx];
+      if (typingWordErr) {
+        typingCharsTotal++;
+        if (typed === currentWord[typingWordPos]) {
+          typingWordErr = false;
+          typingWordPos++;
+          typingCharsCorrect++;
+          if (!typingFirstKeyTime) typingFirstKeyTime = performance.now();
+          renderTypingText();
+          updateTypingStats();
+        }
+        return;
+      }
+      if (!typingFirstKeyTime) typingFirstKeyTime = performance.now();
+      // Якщо слово вже повністю набране — ігноруємо зайві символи, чекаємо пробіл
+      if (typingWordPos >= currentWord.length) return;
+      typingCharsTotal++;
+      if (typed === currentWord[typingWordPos]) {
+        typingCharsCorrect++;
+        typingWordPos++;
+      } else {
+        typingWordErr = true;
+        typingErrors++;
+      }
+      renderTypingText();
+      updateTypingStats();
+    }
+  });
+
+  // input event лише як fallback для мобільних/IME
+  inp.addEventListener('input', function() {
+    this.value = '';
+  });
+});
+
+function startTypingTimer() {
+  typingStarted = true;
+  typingActive = true;
+  document.getElementById('typingStatus').className = 'typing-status running';
+  document.getElementById('typingStatus').textContent = 'Друкуйте!';
+
+  typingTimer = setInterval(() => {
+    typingTimeLeft--;
+    const pct = (typingTimeLeft / TYPING_DURATION) * 100;
+    document.getElementById('typingTimerFill').style.width = pct + '%';
+    document.getElementById('typingTime').innerHTML = typingTimeLeft + '<span class="typing-stat-unit">с</span>';
+    updateTypingStats();
+
+    if (typingTimeLeft <= 0) {
+      finishTypingTest();
+    }
+  }, 1000);
+}
+
+function updateTypingStats() {
+  const elapsed = TYPING_DURATION - typingTimeLeft;
+  if (elapsed < 1) return;
+  const cpm = Math.round((typingCharsCorrect / elapsed) * 60);
+  const acc = typingCharsTotal > 0 ? Math.round((typingCharsCorrect / typingCharsTotal) * 100) : 100;
+  document.getElementById('typingCPM').innerHTML = cpm + '<span class="typing-stat-unit">зн.</span>';
+  document.getElementById('typingAcc').innerHTML = acc + '<span class="typing-stat-unit">%</span>';
+}
+
+function finishTypingTest() {
+  clearInterval(typingTimer);
+  typingActive = false;
+  typingDone = true;
+
+  const elapsed = TYPING_DURATION - typingTimeLeft || 1;
+  const cpm = Math.round((typingCharsCorrect / elapsed) * 60);
+  const acc = typingCharsTotal > 0 ? Math.round((typingCharsCorrect / typingCharsTotal) * 100) : 100;
+
+  document.getElementById('typingTimerFill').style.width = '0%';
+  document.getElementById('typingTime').innerHTML = '0<span class="typing-stat-unit">с</span>';
+  document.getElementById('typingCPM').innerHTML = cpm + '<span class="typing-stat-unit">зн.</span>';
+  document.getElementById('typingAcc').innerHTML = acc + '<span class="typing-stat-unit">%</span>';
+  document.getElementById('typingStatus').className = 'typing-status done';
+  document.getElementById('typingStatus').textContent = 'Тест завершено! ' + cpm + ' зн./хв, точність ' + acc + '%';
+  const inp2 = document.getElementById('typingInput');
+  if (inp2) { inp2.disabled = true; inp2.blur(); }
+  document.getElementById('btnTypingReset').style.display = 'flex';
+  err('e_typing', false);
+
+  _typingResult = cpm + ' зн./хв, точність ' + acc + '%, помилок: ' + typingErrors;
+}
+
+function resetTypingTest() {
+  initTypingTest();
+  setTimeout(() => focusTyping(), 100);
+}
+
+// ── Speed Test (NDT7 / M-Lab) ──
+let speedDone = false;
+
+function _lsSetStatus(txt, cls) {
+  const el = document.getElementById('speedStatus');
+  el.textContent = txt;
+  el.className = 'speed-status' + (cls ? ' ' + cls : '');
+}
+function _lsSetProgress(label, pct) {
+  const wrap = document.getElementById('speedProgressWrap');
+  wrap.style.display = 'block';
+  document.getElementById('speedProgressLabel').textContent = label;
+  document.getElementById('speedProgressPct').textContent = Math.round(pct) + '%';
+  document.getElementById('speedProgressFill').style.width = pct + '%';
+}
+function _lsHideProgress() {
+  document.getElementById('speedProgressWrap').style.display = 'none';
+}
+function _lsCardActive(id) {
+  ['card_dl','card_ul','card_ping'].forEach(c => document.getElementById(c).classList.remove('active'));
+  if (id) document.getElementById(id).classList.add('active');
+}
+
+// ── Speed Test (Cloudflare) ──
+// Використовуємо публічні endpoint-и Cloudflare (edge-сервер у Києві — близько до
+// кандидата, тому швидкість точна ~94% від Ookla). CORS дозволений, серверів не треба.
+const CF_DOWN     = 'https://speed.cloudflare.com/__down?bytes=';
+const CF_UP       = 'https://speed.cloudflare.com/__up';
+const CF_PHASE_MS = 8000;        // тривалість фази download / upload
+const CF_WORKERS  = 4;           // паралельних потоків
+const CF_DL_BYTES = 10_000_000;  // розмір блоку завантаження (10 МБ — перевірено робочим)
+const CF_UL_BYTES = 2_000_000;   // розмір блоку вивантаження (2 МБ)
+
+// Ping — RTT як час обходу fetch до CF edge.
+// НЕ через Performance Resource Timing: cdn-cgi/trace НЕ віддає Timing-Allow-Origin,
+// тому для крос-origin (GitHub Pages) усі timing-поля (connectStart/End, responseStart)
+// обнуляються → rtt=0 → ping показував "—". Тому міряємо просто performance.now() до/після.
+// Endpoint __down?bytes=0 — порожня відповідь, має CORS, перший запит прогріває з'єднання.
+async function _cfPing() {
+  const url = CF_DOWN + '0';
+  // прогрів: підняти TCP/TLS, щоб наступні семпли міряли чистий RTT, а не handshake
+  try { await fetch(url + '&r=' + Math.random(), { cache: 'no-store' }); } catch (_) {}
+  const samples = [];
+  for (let i = 0; i < 6; i++) {
+    const t = performance.now();
+    try { await fetch(url + '&r=' + Math.random(), { cache: 'no-store' }); }
+    catch (_) { continue; }
+    const rtt = performance.now() - t;
+    if (rtt > 0 && rtt < 2000) samples.push(rtt);
+    await new Promise(r => setTimeout(r, 50));
+  }
+  if (!samples.length) return null;
+  samples.sort((a, b) => a - b);
+  return Math.round(samples[0]); // найменший = найчистіший RTT
+}
+
+// Download — N паралельних fetch на __down, рахуємо отримані байти.
+// Вимірюємо від першого реально отриманого байта до кінця фази (без warmup-зрізання
+// всередині — воно ламало старт відліку, коли блок встигав завантажитись миттєво).
+function _cfDownload(onProgress) {
+  return new Promise((resolve) => {
+    let totalBytes = 0, firstByteAt = null, stop = false;
+    const t0 = performance.now();
+
+    const ticker = setInterval(() => {
+      const now = performance.now();
+      _lsSetProgress('↓ Завантаження', Math.min(99, ((now - t0) / CF_PHASE_MS) * 100));
+      if (firstByteAt) {
+        const el = (now - firstByteAt) / 1000;
+        if (el > 0.15) onProgress((totalBytes * 8) / el / 1e6);
+      }
+    }, 150);
+
+    const worker = async () => {
+      while (!stop && performance.now() - t0 < CF_PHASE_MS) {
+        try {
+          const res = await fetch(CF_DOWN + CF_DL_BYTES + '&r=' + Math.random(), { cache: 'no-store' });
+          const reader = res.body.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done || stop) break;
+            if (firstByteAt === null) firstByteAt = performance.now();
+            totalBytes += value.length;
+            if (performance.now() - t0 >= CF_PHASE_MS) { stop = true; try { reader.cancel(); } catch (_) {} break; }
+          }
+        } catch (_) { await new Promise(r => setTimeout(r, 100)); }
+      }
+    };
+
+    Promise.all(Array.from({ length: CF_WORKERS }, worker)).then(() => {
+      clearInterval(ticker);
+      if (firstByteAt === null || totalBytes === 0) { resolve(0); return; }
+      const el = (performance.now() - firstByteAt) / 1000;
+      resolve(el > 0 ? (totalBytes * 8) / el / 1e6 : 0);
+    });
+  });
+}
+
+// Upload — N паралельних fetch POST на __up.
+// ВАЖЛИВО: НЕ можна використовувати xhr.upload.onprogress для крос-origin (GitHub Pages →
+// speed.cloudflare.com). Будь-який слухач на xhr.upload робить запит non-simple → браузер
+// шле preflight OPTIONS → CF __up відповідає 400 → запит падає → upload = 0.
+// (умови simple-request: Fetch spec §CORS, пункт "no upload listeners").
+// Тому міряємо швидкість за часом завершення кожного POST: байти / тривалість.
+// Content-Type: text/plain тримає запит simple. Прогрес-бар — орієнтовний (за часом фази).
+function _cfUpload(onProgress) {
+  return new Promise((resolve) => {
+    const buf = new Uint8Array(CF_UL_BYTES);
+    for (let i = 0; i < buf.length; i += 65536) crypto.getRandomValues(buf.subarray(i, Math.min(i + 65536, buf.length)));
+
+    let totalBytes = 0, firstSendAt = null, lastDoneAt = null, stop = false;
+    const t0 = performance.now();
+
+    const ticker = setInterval(() => {
+      const now = performance.now();
+      _lsSetProgress('↑ Вивантаження', Math.min(99, ((now - t0) / CF_PHASE_MS) * 100));
+      if (firstSendAt && totalBytes > 0) {
+        const el = (now - firstSendAt) / 1000;
+        if (el > 0.15) onProgress((totalBytes * 8) / el / 1e6);
+      }
+    }, 150);
+
+    const sendOne = () => new Promise((res) => {
+      if (firstSendAt === null) firstSendAt = performance.now();
+      // fetch без слухачів upload → з text/plain це simple-request → без preflight
+      fetch(CF_UP + '?r=' + Math.random(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: buf,
+        cache: 'no-store',
+      }).then(() => {
+        totalBytes += CF_UL_BYTES;       // тіло надіслане повністю (інакше fetch reject)
+        lastDoneAt = performance.now();
+        res();
+      }).catch(() => res());
+    });
+
+    const worker = async () => {
+      while (!stop && performance.now() - t0 < CF_PHASE_MS) {
+        await sendOne();
+        if (performance.now() - t0 >= CF_PHASE_MS) stop = true;
+      }
+    };
+
+    Promise.all(Array.from({ length: CF_WORKERS }, worker)).then(() => {
+      clearInterval(ticker);
+      if (firstSendAt === null || totalBytes === 0 || lastDoneAt === null) { resolve(0); return; }
+      const el = (lastDoneAt - firstSendAt) / 1000;
+      resolve(el > 0 ? (totalBytes * 8) / el / 1e6 : 0);
+    });
+  });
+}
+
+async function runSpeedTest() {
+  const btn = document.getElementById('btnSpeed');
+  btn.disabled = true;
+  speedDone = false;
+  window._speedResult = null;
+
+  document.getElementById('dlVal').textContent   = '—';
+  document.getElementById('ulVal').textContent   = '—';
+  document.getElementById('pingVal').textContent = '—';
+  err('e_speed', false);
+
+  try {
+    // 1. Ping
+    _lsCardActive('card_ping');
+    _lsSetStatus('Вимірюємо ping…', 'running');
+    const ping = await _cfPing();
+    document.getElementById('pingVal').textContent = (ping === null ? '—' : ping);
+
+    // 2. Download
+    _lsCardActive('card_dl');
+    _lsSetStatus('↓ Завантаження…', 'running');
+    _lsSetProgress('↓ Завантаження', 0);
+    const dl = await _cfDownload((mbps) => {
+      document.getElementById('dlVal').textContent = mbps.toFixed(1);
+    });
+    document.getElementById('dlVal').textContent = dl.toFixed(1);
+
+    // 3. Upload
+    _lsCardActive('card_ul');
+    _lsSetStatus('↑ Вивантаження…', 'running');
+    _lsSetProgress('↑ Вивантаження', 0);
+    const ul = await _cfUpload((mbps) => {
+      document.getElementById('ulVal').textContent = mbps.toFixed(1);
+    });
+    document.getElementById('ulVal').textContent = ul.toFixed(1);
+
+    _lsCardActive(null);
+    _lsHideProgress();
+    speedDone = true;
+    _lsSetStatus('Тест завершено ✓', 'done');
+    window._speedResult = '↓ ' + dl.toFixed(1) + ' Мбіт/с, ↑ ' + ul.toFixed(1) + ' Мбіт/с, Ping ' + (ping === null ? '—' : ping) + ' мс';
+    err('e_speed', false);
+    saveDraft();
+
+  } catch (e) {
+    _lsCardActive(null);
+    _lsHideProgress();
+    _lsSetStatus('Помилка. Перевірте з\'єднання та спробуйте ще раз.', '');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Повторити тест';
+}
+
+// ── Build step queue from activeQuestions ──
+function buildStepQueue() {
+  stepQueue = [];
+  stepQueue.push({ type: 'welcome', el: document.getElementById('step0') });
+  let num = 1;
+  for (const qid of activeQuestions) {
+    const el = document.getElementById('stepQ_' + qid);
+    if (el) {
+      // Update badge number
+      const badge = document.getElementById('badgeQ_' + qid);
+      if (badge) badge.textContent = num;
+      stepQueue.push({ type: 'question', qid, el });
+      num++;
+    }
+  }
+  curIdx = 0;
+}
+
+// ── UI update ──
+function uiSync() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  stepQueue[curIdx].el.classList.add('active');
+
+  const isWelcome = stepQueue[curIdx].type === 'welcome';
+  const totalQ = stepQueue.length - 1; // excluding welcome
+  const currentQ = curIdx; // 0 = welcome, 1..n = questions
+
+  const progressWrap = document.getElementById('progressWrap');
+  if (isWelcome) {
+    progressWrap.style.display = 'none';
+  } else {
+    progressWrap.style.display = 'block';
+    const pct = Math.round(((currentQ - 1) / totalQ) * 100);
+    document.getElementById('pFill').style.width = pct + '%';
+    document.getElementById('pLabel').textContent = 'Крок ' + currentQ + ' з ' + totalQ;
+    document.getElementById('pPct').textContent = pct + '%';
+  }
+
+  document.getElementById('btnBack').style.visibility = curIdx > 0 ? 'visible' : 'hidden';
+
+  const nb = document.getElementById('btnNext');
+  if (isWelcome) {
+    nb.innerHTML = 'Почати <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+  } else if (curIdx === stepQueue.length - 1) {
+    nb.innerHTML = 'Надіслати <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+  } else {
+    nb.innerHTML = 'Далі <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+  }
+
+  // Init typing test when entering that step
+  if (!isWelcome && stepQueue[curIdx].qid === 'typing' && !typingStarted && !typingDone) {
+    initTypingTest();
+    setTimeout(() => focusTyping(), 150);
+  }
+}
+
+function next() {
+  const step = stepQueue[curIdx];
+  if (!validateStep(step)) return;
+  if (curIdx === stepQueue.length - 1) { submit(); return; }
+  curIdx++;
+  saveDraft();
+  uiSync();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function prev() {
+  if (curIdx > 0) { curIdx--; saveDraft(); uiSync(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+
+// ── Keyboard ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.id !== 'typingInput') {
+    e.preventDefault(); next();
+  }
+});
+
+// ── Validation ──
+function err(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('on', show);
+}
+function mark(id, bad) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('err', bad);
+}
+
+function validateStep(step) {
+  if (step.type === 'welcome') return true;
+  const qid = step.qid;
+
+  if (qid === 'name') {
+    const v = document.getElementById('q_name').value.trim();
+    mark('q_name', v.length < 3); err('e_name', v.length < 3);
+    return v.length >= 3;
+  }
+  if (qid === 'email') {
+    const v = document.getElementById('q_email').value.trim();
+    const bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    mark('q_email', bad); err('e_email', bad);
+    return !bad;
+  }
+  if (qid === 'facts') {
+    const v = document.getElementById('q_facts').value.trim();
+    mark('q_facts', v.length < 1); err('e_facts', v.length < 1);
+    return v.length >= 1;
+  }
+  if (qid === 'spec') {
+    const v = document.getElementById('q_spec').value.trim();
+    mark('q_spec', v.length < 2); err('e_spec', v.length < 2);
+    return v.length >= 2;
+  }
+  if (qid === 'why') {
+    const v = document.getElementById('q_why').value.trim();
+    mark('q_why', v.length < 1); err('e_why', v.length < 1);
+    return v.length >= 1;
+  }
+  if (qid === 'job_period') {
+    const v = document.querySelector('input[name="jp"]:checked');
+    err('e_jp', !v); return !!v;
+  }
+  if (qid === 'stress') {
+    const v = document.getElementById('q_stress').value.trim();
+    mark('q_stress', v.length < 1); err('e_stress', v.length < 1);
+    return v.length >= 1;
+  }
+  if (qid === 'honesty') {
+    const v = document.querySelector('input[name="hn"]:checked');
+    err('e_hn', !v); return !!v;
+  }
+  if (qid === 'quit_reason') {
+    const v = document.getElementById('q_quit_reason').value.trim();
+    mark('q_quit_reason', v.length < 1); err('e_quit_reason', v.length < 1);
+    return v.length >= 1;
+  }
+  if (qid === 'upset_situation') {
+    const v = document.getElementById('q_upset_situation').value.trim();
+    mark('q_upset_situation', v.length < 1); err('e_upset_situation', v.length < 1);
+    return v.length >= 1;
+  }
+  if (qid === 'conflict_style') {
+    const v = document.querySelector('input[name="cs"]:checked');
+    err('e_cs', !v); return !!v;
+  }
+  if (qid === 'channel_random') {
+    const v = document.querySelector('input[name="cr"]:checked');
+    err('e_cr', !v); return !!v;
+  }
+  if (qid === 'hw') {
+    const cpu = document.getElementById('q_cpu').value.trim();
+    const ram = document.getElementById('q_ram').value.trim();
+    const storage = document.getElementById('q_storage').value.trim();
+    const ssdSel = document.getElementById('st_ssd').checked;
+    const hddSel = document.getElementById('st_hdd').checked;
+    const noneSelected = !ssdSel && !hddSel;
+    const bad = cpu.length < 2 || ram.length < 1 || storage.length < 1 || noneSelected;
+    mark('q_cpu', cpu.length < 2);
+    mark('q_ram', ram.length < 1);
+    mark('q_storage', storage.length < 1);
+    err('e_hw', bad);
+    return !bad;
+  }
+  if (qid === 'os') {
+    const osT = document.querySelector('input[name="os"]:checked');
+    const osV = document.getElementById('q_osv').value.trim();
+    const bad = !osT || osV.length < 1;
+    err('e_os', bad); return !bad;
+  }
+  if (qid === 'backup') {
+    if (document.getElementById('noBp').checked) return true;
+    const v = document.getElementById('bp0n').value.trim();
+    mark('bp0n', v.length < 2); err('e_bp', v.length < 2);
+    return v.length >= 2;
+  }
+  if (qid === 'internet') {
+    if (!speedDone) { err('e_speed', true); return false; }
+    return true;
+  }
+  if (qid === 'typing') {
+    if (!typingDone) { err('e_typing', true); return false; }
+    return true;
+  }
+  if (qid === 'night_shift') {
+    const v = document.querySelector('input[name="ns"]:checked');
+    err('e_ns', !v); return !!v;
+  }
+  return true;
+}
+
+// ── Radio helper ──
+function pickRadio(lbl, name) {
+  document.querySelectorAll('input[name="' + name + '"]').forEach(r => {
+    r.closest('.opt-item').classList.remove('sel');
+  });
+  lbl.classList.add('sel');
+  lbl.querySelector('input').checked = true;
+  saveDraft();
+}
+
+// ── Storage type helper (checkbox) ──
+document.addEventListener('DOMContentLoaded', () => {
+  ['st_ssd', 'st_hdd'].forEach(id => {
+    const cb = document.getElementById(id);
+    if (!cb) return;
+    cb.addEventListener('change', function() {
+      this.closest('.storage-opt').classList.toggle('sel', this.checked);
+      err('e_hw', false);
+    });
+  });
+});
+
+// ── Char counters ──
+['facts','stress','quit_reason','upset_situation'].forEach(id => {
+  const el = document.getElementById('q_' + id);
+  const cc = document.getElementById('cc_' + id);
+  if (!el || !cc) return;
+  const max = parseInt(el.getAttribute('maxlength')) || 1000;
+  el.addEventListener('input', function () {
+    const l = this.value.length;
+    cc.textContent = l + ' / ' + max;
+    cc.className = 'cc' + (l >= max ? ' over' : l > max * .88 ? ' warn' : '');
+    if (l > 0) { mark('q_' + id, false); err('e_' + id, false); }
+  });
+});
+
+// ── Clear err on type ──
+['q_name','q_email','q_spec','q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => el.classList.remove('err'));
+});
+
+// ── Backup rows ──
+let bpCount = 1;
+function addBpRow() {
+  if (bpCount >= 6) return;
+  const list = document.getElementById('bpList');
+  const i = bpCount;
+  const row = document.createElement('div');
+  row.className = 'backup-row'; row.id = 'brow' + i;
+  row.innerHTML = `
+    <input type="text" id="bp${i}n" placeholder="Назва джерела…">
+    <input type="number" id="bp${i}h" placeholder="год" min="0" max="99" step="0.5">
+    <button type="button" onclick="rmBpRow(${i})"
+      style="width:28px;height:28px;background:#f5f5f5;border:2px solid #e2e2e2;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0;"
+      onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'"
+      onmouseout="this.style.borderColor='#e2e2e2';this.style.color='inherit'">✕</button>`;
+  list.appendChild(row);
+  bpCount++;
+  if (bpCount >= 6) document.getElementById('addBpBtn').style.display = 'none';
+}
+function rmBpRow(i) {
+  const r = document.getElementById('brow' + i);
+  if (r) { r.remove(); if (bpCount >= 6) { bpCount--; document.getElementById('addBpBtn').style.display = 'flex'; } }
+}
+function toggleNoBp(cb) {
+  ['bpList','addBpBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.opacity = cb.checked ? '.4' : '1';
+    el.style.pointerEvents = cb.checked ? 'none' : 'auto';
+  });
+  if (cb.checked) err('e_bp', false);
+}
+
+// ── Collect ──
+function collect() {
+  const osT  = document.querySelector('input[name="os"]:checked');
+  const nsV  = document.querySelector('input[name="ns"]:checked');
+  const jpV  = document.querySelector('input[name="jp"]:checked');
+  const hnV  = document.querySelector('input[name="hn"]:checked');
+  const csV  = document.querySelector('input[name="cs"]:checked');
+  const crV  = document.querySelector('input[name="cr"]:checked');
+  const noBp = document.getElementById('noBp').checked;
+
+  const ramVal = document.getElementById('q_ram').value.trim();
+  const storageVal = document.getElementById('q_storage').value.trim();
+  const ssdSel = document.getElementById('st_ssd').checked;
+  const hddSel = document.getElementById('st_hdd').checked;
+  const storageParts = [];
+  if (ssdSel) storageParts.push('SSD');
+  if (hddSel) storageParts.push('HDD');
+  const storageStr = (storageParts.join('+') || '—') + (storageVal ? ' ' + storageVal + ' ГБ' : '');
+
+  const backups = [];
+  if (!noBp) {
+    for (let i = 0; i < bpCount; i++) {
+      const nm = document.getElementById('bp' + i + 'n');
+      const hr = document.getElementById('bp' + i + 'h');
+      if (nm && nm.value.trim()) backups.push({ name: nm.value.trim(), hours: hr ? hr.value : '' });
+    }
+  }
+
+  const pcStr = [
+    'Процесор: ' + document.getElementById('q_cpu').value.trim(),
+    'ОЗУ: ' + ramVal + ' ГБ',
+    'Накопичувач: ' + storageStr,
+  ].join(', ');
+
+  const osStr = osT ? (osT.value + ' ' + document.getElementById('q_osv').value.trim()).trim() : '—';
+
+  // Only include active questions in submission
+  const activeSet = new Set(activeQuestions);
+  const result = { _activeQuestions: activeQuestions };
+
+  if (activeSet.has('name'))            result.name            = document.getElementById('q_name').value.trim();
+  if (activeSet.has('email'))           result.email           = document.getElementById('q_email').value.trim();
+  if (activeSet.has('facts'))           result.facts           = document.getElementById('q_facts').value.trim();
+  if (activeSet.has('spec'))            result.specialty       = document.getElementById('q_spec').value.trim();
+  if (activeSet.has('job_period'))      result.jobPeriod       = jpV ? jpV.value : '—';
+  if (activeSet.has('stress'))          result.stressSituations= document.getElementById('q_stress').value.trim();
+  if (activeSet.has('honesty'))         result.honestyView     = hnV ? hnV.value : '—';
+  if (activeSet.has('quit_reason'))     result.quitReason      = document.getElementById('q_quit_reason').value.trim();
+  if (activeSet.has('upset_situation')) result.upsetSituation  = document.getElementById('q_upset_situation').value.trim();
+  if (activeSet.has('conflict_style'))  result.conflictStyle   = csV ? csV.value : '—';
+  if (activeSet.has('channel_random'))  result.channelRandom   = crV ? crV.value : '—';
+  if (activeSet.has('hw'))              result.pc              = pcStr;
+  if (activeSet.has('os'))              result.os              = osStr;
+  if (activeSet.has('backup'))          { result.noBackup = noBp; result.backups = backups; }
+  if (activeSet.has('internet'))        result.internetSpeed   = window._speedResult || '—';
+  if (activeSet.has('typing'))          result.typingSpeed     = _typingResult || '—';
+  if (activeSet.has('night_shift'))     result.nightShift      = nsV ? nsV.value : '—';
+
+  // Тіньова інфо про пристрій
+  const ua = navigator.userAgent;
+  const isMobile  = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  const isTablet  = /iPad|Tablet/i.test(ua) || (isMobile && Math.min(screen.width, screen.height) > 600);
+  const deviceType = isTablet ? 'Планшет' : isMobile ? 'Мобільний' : 'Комп\'ютер';
+  const browserMatch = ua.match(/(Chrome|Firefox|Safari|Edge|OPR|Opera)\/[\d.]+/g);
+  const browser = browserMatch ? browserMatch[browserMatch.length - 1] : ua.substring(0, 60);
+  result._device = deviceType + ' | ' + screen.width + 'x' + screen.height + ' | ' + browser + ' | ' + navigator.language;
+
+  return result;
+}
+
+// ── LocalStorage draft ──
+const LS_KEY = 'mono_anketa_draft';
+
+function saveDraft() {
+  const draft = {};
+  // Text/email/number inputs
+  ['q_name','q_email','q_facts','q_spec','q_stress','q_quit_reason','q_upset_situation',
+   'q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) draft[id] = el.value;
+  });
+  // Radios
+  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os']].forEach(([name, key]) => {
+    const ch = document.querySelector('input[name="' + name + '"]:checked');
+    if (ch) draft['radio_' + key] = ch.value;
+  });
+  // Checkboxes (storage type)
+  draft['st_ssd'] = document.getElementById('st_ssd').checked;
+  draft['st_hdd'] = document.getElementById('st_hdd').checked;
+  // No backup checkbox
+  draft['noBp'] = document.getElementById('noBp').checked;
+  // Backup rows
+  const bpRows = [];
+  for (let i = 0; i < bpCount; i++) {
+    const nm = document.getElementById('bp' + i + 'n');
+    const hr = document.getElementById('bp' + i + 'h');
+    if (nm) bpRows.push({ n: nm.value, h: hr ? hr.value : '' });
+  }
+  draft['bpRows'] = bpRows;
+  // Speed result
+  if (window._speedResult) draft['_speedResult'] = window._speedResult;
+  draft['speedDone'] = speedDone;
+  // Current step
+  draft['curIdx'] = curIdx;
+
+  try { localStorage.setItem(LS_KEY, JSON.stringify(draft)); } catch (_) {}
+}
+
+function restoreDraft() {
+  let draft;
+  try { draft = JSON.parse(localStorage.getItem(LS_KEY)); } catch (_) {}
+  if (!draft) return;
+
+  // Text fields
+  ['q_name','q_email','q_facts','q_spec','q_stress','q_quit_reason','q_upset_situation',
+   'q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && draft[id] != null) el.value = draft[id];
+  });
+  // Update char counters
+  ['facts','stress','quit_reason','upset_situation'].forEach(id => {
+    const el = document.getElementById('q_' + id);
+    const cc = document.getElementById('cc_' + id);
+    if (el && cc) {
+      const max = parseInt(el.getAttribute('maxlength')) || 1000;
+      cc.textContent = el.value.length + ' / ' + max;
+    }
+  });
+  // Radios
+  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os']].forEach(([name, key]) => {
+    const val = draft['radio_' + key];
+    if (!val) return;
+    const inp = document.querySelector('input[name="' + name + '"][value="' + CSS.escape(val) + '"]');
+    if (inp) {
+      inp.checked = true;
+      inp.closest('.opt-item') && inp.closest('.opt-item').classList.add('sel');
+    }
+  });
+  // Storage checkboxes
+  if (draft['st_ssd']) {
+    const cb = document.getElementById('st_ssd');
+    if (cb) { cb.checked = true; cb.closest('.storage-opt').classList.add('sel'); }
+  }
+  if (draft['st_hdd']) {
+    const cb = document.getElementById('st_hdd');
+    if (cb) { cb.checked = true; cb.closest('.storage-opt').classList.add('sel'); }
+  }
+  // No backup
+  if (draft['noBp']) {
+    const cb = document.getElementById('noBp');
+    if (cb) { cb.checked = true; toggleNoBp(cb); }
+  }
+  // Backup rows
+  if (Array.isArray(draft['bpRows']) && draft['bpRows'].length > 0) {
+    draft['bpRows'].forEach((row, i) => {
+      if (i > 0) addBpRow();
+      const nm = document.getElementById('bp' + i + 'n');
+      const hr = document.getElementById('bp' + i + 'h');
+      if (nm) nm.value = row.n;
+      if (hr) hr.value = row.h;
+    });
+  }
+  // Restore speed result
+  if (draft['_speedResult']) {
+    window._speedResult = draft['_speedResult'];
+    speedDone = true;
+    const el = document.getElementById('speedStatus');
+    if (el) { el.textContent = draft['_speedResult']; el.className = 'speed-status done'; }
+    // Parse back into cards
+    const m = draft['_speedResult'].match(/↓\s*([\d.]+).*↑\s*([\d.]+).*Ping\s*(\d+)/);
+    if (m) {
+      const dlEl = document.getElementById('dlVal');
+      const ulEl = document.getElementById('ulVal');
+      const pgEl = document.getElementById('pingVal');
+      if (dlEl) dlEl.textContent = m[1];
+      if (ulEl) ulEl.textContent = m[2];
+      if (pgEl) pgEl.textContent = m[3];
+    }
+  }
+  // Restore step
+  if (draft['curIdx'] > 0 && draft['curIdx'] < stepQueue.length) {
+    curIdx = draft['curIdx'];
+  }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(LS_KEY); } catch (_) {}
+}
+
+// ── Submit ──
+async function submit() {
+  const data = collect();
+  const btn = document.getElementById('btnNext');
+  btn.disabled = true;
+  const msg = document.getElementById('sendMsg');
+  if (msg) msg.textContent = 'Надсилаємо…';
+
+  clearDraft();
+  showThankYou();
+
+  if (APPS_SCRIPT_URL) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = '_blank_submit_frame';
+    const inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = 'payload';
+    inp.value = JSON.stringify(data);
+    form.appendChild(inp);
+    let frame = document.getElementById('_submit_frame');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = '_blank_submit_frame';
+      frame.id   = '_submit_frame';
+      frame.style.display = 'none';
+      document.body.appendChild(frame);
+    }
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+  }
+}
+
+function showThankYou() {
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+  document.querySelector('.header').style.display = 'none';
+  document.getElementById('thankyou').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Load config from Google Sheets via Apps Script GET ──
+async function loadConfig() {
+  if (!CONFIG_URL) {
+    // No config URL — show all questions
+    activeQuestions = [...ALL_QUESTIONS];
+    return;
+  }
+
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('on');
+
+  try {
+    const res = await Promise.race([
+      fetch(CONFIG_URL + (CONFIG_URL.includes('?') ? '&' : '?') + 'action=getConfig&t=' + Date.now(), { cache: 'no-store' }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000))
+    ]);
+    const json = await res.json();
+    // Новий формат: { order: [{qid, visible}, ...] } — порядок і видимість з таблиці.
+    // Старий формат (fallback): { "name": true, "email": false, ... }.
+    if (json && Array.isArray(json.order)) {
+      const known = new Set(ALL_QUESTIONS);
+      activeQuestions = json.order
+        .filter(o => o && known.has(o.qid) && o.visible !== false)
+        .map(o => o.qid);
+      // Підстраховка: якщо таблиця порожня/зламана — показуємо всі
+      if (activeQuestions.length === 0) activeQuestions = [...ALL_QUESTIONS];
+    } else {
+      activeQuestions = ALL_QUESTIONS.filter(qid => json[qid] !== false);
+    }
+  } catch (e) {
+    console.warn('Config load failed, showing all questions:', e);
+    activeQuestions = [...ALL_QUESTIONS];
+  } finally {
+    overlay.classList.remove('on');
+  }
+}
+
+// ── Init ──
+(async function init() {
+  await loadConfig();
+  buildStepQueue();
+  restoreDraft();
+  uiSync();
+
+  // Auto-save on any input/change
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea').forEach(el => {
+    el.addEventListener('input', saveDraft);
+  });
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => {
+    el.addEventListener('change', saveDraft);
+  });
+})();
+</script>
+</body>
+</html>
