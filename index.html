@@ -283,7 +283,7 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
 .add-row-btn:hover { border-color: var(--black); color: var(--black); }
 .no-backup-row {
   display: flex; align-items: center; gap: 9px;
-  font-size: 13px; color: var(--muted); cursor: pointer; margin-top: 10px;
+  font-size: 14px; color: var(--black); font-weight: 600; cursor: pointer; margin-top: 10px;
 }
 .no-backup-row input { width: 16px; height: 16px; accent-color: var(--black); cursor: pointer; }
 
@@ -781,8 +781,14 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
         <div><div class="opt-lbl">Інше</div></div>
       </label>
     </div>
-    <div class="spec-lbl">Версія ОС</div>
-    <input type="text" id="q_osv" placeholder="Напр.: Windows 11 Pro 23H2, macOS Sonoma 14.4…">
+    <div id="os_other_wrap" style="display:none;margin-bottom:14px">
+      <div class="spec-lbl">Яка саме ОС</div>
+      <input type="text" id="q_os_other" placeholder="Напр.: FreeBSD, ChromeOS…">
+    </div>
+    <div id="os_ver_wrap">
+      <div class="spec-lbl">Версія ОС</div>
+      <input type="text" id="q_osv" inputmode="decimal" placeholder="Напр.: 11, 10, 14.4…">
+    </div>
     <div class="errmsg" id="e_os">Будь ласка, оберіть тип ОС та вкажіть версію</div>
   </div>
 
@@ -1604,15 +1610,53 @@ function validateStep(step) {
   }
   if (qid === 'os') {
     const osT = document.querySelector('input[name="os"]:checked');
+    const eOs = document.getElementById('e_os');
+    if (!osT) { if (eOs) eOs.textContent = 'Будь ласка, оберіть тип ОС та вкажіть версію'; err('e_os', true); return false; }
+    if (osT.value === 'Інше') {
+      // для «Інше» — назва ОС текстом (обовʼязково)
+      const other = document.getElementById('q_os_other').value.trim();
+      const bad = other.length < 2;
+      if (eOs && bad) eOs.textContent = 'Вкажіть, яка саме операційна система';
+      err('e_os', bad); return !bad;
+    }
     const osV = document.getElementById('q_osv').value.trim();
-    const bad = !osT || osV.length < 1;
+    // версія — лише цифри, має містити хоча б одну
+    const hasDigit = /\d/.test(osV);
+    const bad = osV.length < 1 || !hasDigit;
+    if (eOs) {
+      if (osV.length < 1) eOs.textContent = 'Будь ласка, оберіть тип ОС та вкажіть версію';
+      else if (!hasDigit) eOs.textContent = 'Вкажіть номер версії цифрами, напр.: 11, 10, 14.4';
+    }
     err('e_os', bad); return !bad;
   }
   if (qid === 'backup') {
     if (document.getElementById('noBp').checked) return true;
-    const v = document.getElementById('bp0n').value.trim();
-    mark('bp0n', v.length < 2); err('e_bp', v.length < 2);
-    return v.length >= 2;
+    let hasSource = false, ok = true;
+    for (let i = 0; i < bpCount; i++) {
+      const nm = document.getElementById('bp' + i + 'n');
+      const hr = document.getElementById('bp' + i + 'h');
+      if (!nm) continue;
+      const hasName = nm.value.trim().length >= 2;
+      const hasHours = hr && hr.value.trim() !== '';
+      if (hasName) {
+        hasSource = true;
+        // якщо джерело заповнене — години обов'язкові
+        mark('bp' + i + 'h', !hasHours);
+        if (!hasHours) ok = false;
+      } else {
+        mark('bp' + i + 'h', false);
+      }
+      mark('bp' + i + 'n', false);
+    }
+    // має бути хоча б одне джерело
+    mark('bp0n', !hasSource);
+    const eBp = document.getElementById('e_bp');
+    if (eBp) {
+      if (!hasSource) eBp.textContent = 'Будь ласка, вкажіть хоча б одне джерело або позначте «немає»';
+      else if (!ok)   eBp.textContent = 'Вкажіть кількість годин для кожного джерела';
+    }
+    err('e_bp', !hasSource || !ok);
+    return hasSource && ok;
   }
   if (qid === 'internet') {
     if (!speedDone) { err('e_speed', true); return false; }
@@ -1636,7 +1680,18 @@ function pickRadio(lbl, name) {
   });
   lbl.classList.add('sel');
   lbl.querySelector('input').checked = true;
+  if (name === 'os') syncOsOther();
   saveDraft();
+}
+
+// ── Показ поля «Яка саме ОС» при виборі «Інше» ──
+function syncOsOther() {
+  const sel = document.querySelector('input[name="os"]:checked');
+  const isOther = sel && sel.value === 'Інше';
+  const otherWrap = document.getElementById('os_other_wrap');
+  const verWrap = document.getElementById('os_ver_wrap');
+  if (otherWrap) otherWrap.style.display = isOther ? '' : 'none';
+  if (verWrap) verWrap.style.display = isOther ? 'none' : '';
 }
 
 // ── Storage type helper (checkbox) ──
@@ -1666,10 +1721,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── Clear err on type ──
-['q_name','q_email','q_spec','q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+['q_name','q_email','q_spec','q_cpu','q_ram','q_storage','q_osv','q_os_other'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', () => el.classList.remove('err'));
 });
+
+// ── Версія ОС: лише цифри (та крапка для версій типу 14.4) ──
+(() => {
+  const el = document.getElementById('q_osv');
+  if (!el) return;
+  el.addEventListener('input', () => {
+    const cleaned = el.value.replace(/[^\d.]/g, '');
+    if (cleaned !== el.value) el.value = cleaned;
+  });
+})();
 
 // ── Backup rows ──
 let bpCount = 1;
@@ -1727,7 +1792,7 @@ function collect() {
     for (let i = 0; i < bpCount; i++) {
       const nm = document.getElementById('bp' + i + 'n');
       const hr = document.getElementById('bp' + i + 'h');
-      if (nm && nm.value.trim()) backups.push({ name: nm.value.trim(), hours: hr ? hr.value : '' });
+      if (nm && nm.value.trim()) backups.push({ name: nm.value.trim(), hours: hr ? hr.value.trim() : '' });
     }
   }
 
@@ -1737,7 +1802,11 @@ function collect() {
     'Накопичувач: ' + storageStr,
   ].join(', ');
 
-  const osStr = osT ? (osT.value + ' ' + document.getElementById('q_osv').value.trim()).trim() : '—';
+  const osStr = osT
+    ? (osT.value === 'Інше'
+        ? document.getElementById('q_os_other').value.trim()
+        : (osT.value + ' ' + document.getElementById('q_osv').value.trim()).trim())
+    : '—';
 
   // Only include active questions in submission
   const activeSet = new Set(activeQuestions);
@@ -1780,7 +1849,7 @@ function saveDraft() {
   const draft = {};
   // Text/email/number inputs
   ['q_name','q_email','q_facts','q_spec','q_stress','q_quit_reason','q_upset_situation',
-   'q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+   'q_cpu','q_ram','q_storage','q_osv','q_os_other'].forEach(id => {
     const el = document.getElementById(id);
     if (el) draft[id] = el.value;
   });
@@ -1818,7 +1887,7 @@ function restoreDraft() {
 
   // Text fields
   ['q_name','q_email','q_facts','q_spec','q_stress','q_quit_reason','q_upset_situation',
-   'q_cpu','q_ram','q_storage','q_osv'].forEach(id => {
+   'q_cpu','q_ram','q_storage','q_osv','q_os_other'].forEach(id => {
     const el = document.getElementById(id);
     if (el && draft[id] != null) el.value = draft[id];
   });
@@ -1841,6 +1910,7 @@ function restoreDraft() {
       inp.closest('.opt-item') && inp.closest('.opt-item').classList.add('sel');
     }
   });
+  syncOsOther();
   // Storage checkboxes
   if (draft['st_ssd']) {
     const cb = document.getElementById('st_ssd');
