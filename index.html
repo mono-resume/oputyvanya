@@ -815,7 +815,7 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
   <!-- Q: backup — Резервне живлення -->
   <div class="step" id="stepQ_backup" data-qid="backup">
     <div class="step-badge"><div class="step-badge-num" id="badgeQ_backup">15</div>Резервне живлення</div>
-    <div class="step-q">Резервні джерела живлення під час відключень</div>
+    <div class="step-q">Вкажіть наявні резервні джерела живлення під час відключень для вашого комп'ютера та інтернету?</div>
     <div class="step-hint">Вкажіть усі наявні джерела та приблизний час роботи від кожного.</div>
 
     <div class="backup-head">
@@ -1045,8 +1045,8 @@ const ALL_QUESTIONS = [
 ];
 
 // Питання що є лише для певної вакансії (виключаються для іншої)
-const SOFT_ONLY_QUESTIONS = new Set(['schedule']);       // тільки Soft Collection
-const TURBOTA_ONLY_QUESTIONS = new Set(['night_shift']); // тільки Служба турботи
+const SOFT_ONLY_QUESTIONS = new Set(['schedule']);                        // тільки Soft Collection
+const TURBOTA_ONLY_QUESTIONS = new Set(['night_shift', 'channel_random']); // тільки Служба турботи
 
 // Fallback — якщо конфіг недоступний, показуємо всі питання
 let activeQuestions = [...ALL_QUESTIONS];
