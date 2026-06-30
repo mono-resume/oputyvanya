@@ -540,6 +540,26 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
     <div class="welcome-sub">Перед нашою зустріччю просимо заповнити коротку анкету — це допоможе нам краще підготуватись до розмови і зробити її максимально корисною для тебе.</div>
   </div>
 
+  <!-- Q: vacancy -->
+  <div class="step" id="stepQ_vacancy" data-qid="vacancy">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_vacancy">1</div>Вакансія</div>
+    <div class="step-q">Оберіть свою вакансію</div>
+    <div class="step-hint">Вкажіть позицію, на яку ви претендуєте.</div>
+    <div class="opt-list" id="vac_list">
+      <label class="opt-item" onclick="pickRadio(this,'vac')">
+        <input type="radio" name="vac" value="Служба турботи про клієнтів">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Служба турботи про клієнтів</div></div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'vac')">
+        <input type="radio" name="vac" value="Фахівець Soft Collection">
+        <div class="opt-dot"></div>
+        <div><div class="opt-lbl">Фахівець Soft Collection</div></div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_vac">Будь ласка, оберіть вакансію</div>
+  </div>
+
   <!-- Q: name -->
   <div class="step" id="stepQ_name" data-qid="name">
     <div class="step-badge"><div class="step-badge-num" id="badgeQ_name">1</div>Особисті дані</div>
@@ -903,6 +923,64 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
     <div class="errmsg" id="e_typing">Будь ласка, завершіть тест друку</div>
   </div>
 
+  <!-- Q: schedule — Графік (лише Soft Collection) -->
+  <div class="step" id="stepQ_schedule" data-qid="schedule">
+    <div class="step-badge"><div class="step-badge-num" id="badgeQ_schedule">—</div>Графік роботи</div>
+    <div class="step-q">Який графік для себе оберете?</div>
+    <div class="step-hint">Оберіть найбільш зручний варіант графіку роботи.</div>
+    <div class="opt-list" id="sch_list">
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="9:00–20:00, 10 год, 3 вих/тиж">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З 9:00–20:00, 10 робочих годин</div>
+          <div class="opt-sub">3 вихідних у тиждень (вт, сб, нд або чт, нд, пн)</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="9:00–18:00, 8 год, 2 вих/тиж">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З 9:00–18:00, 8 робочих годин</div>
+          <div class="opt-sub">2 вихідних у тиждень (сб, нд або нд, пн)</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="11:00–20:00, 8 год, 2 вих/тиж">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З 11:00–20:00, 8 робочих годин</div>
+          <div class="opt-sub">2 вихідних у тиждень (сб, нд або нд, пн)</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="9:00–15:30 або 13:30–20:00, 6 год, 2 вих/тиж">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З 9:00–15:30 або 13:30–20:00, 6 робочих годин</div>
+          <div class="opt-sub">2 вихідних у тиждень (сб, нд)</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="Різні години старту, 2 вих/тиж (сб, нд)">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З різними годинами старту роботи</div>
+          <div class="opt-sub">Пн: 9–20, Вт: 9–18, Ср: 9–15:30, Чт: 9–18, Пт: 9–18 / 2 вихідних (сб, нд)</div>
+        </div>
+      </label>
+      <label class="opt-item" onclick="pickRadio(this,'sch')">
+        <input type="radio" name="sch" value="8:30–20:30, 12 год, 2/2">
+        <div class="opt-dot"></div>
+        <div>
+          <div class="opt-lbl">З 8:30–20:30, 12 робочих годин</div>
+          <div class="opt-sub">2 через 2</div>
+        </div>
+      </label>
+    </div>
+    <div class="errmsg" id="e_sch">Будь ласка, оберіть графік роботи</div>
+  </div>
+
   <!-- Q: night_shift — Нічні зміни -->
   <div class="step" id="stepQ_night_shift" data-qid="night_shift">
     <div class="step-badge"><div class="step-badge-num" id="badgeQ_night_shift">18</div>Графік роботи</div>
@@ -960,14 +1038,36 @@ const CONFIG_URL = APPS_SCRIPT_URL; // GET ?action=getConfig читає арку
 
 // Всі питання у порядку відображення (qid відповідає data-qid кожного step)
 const ALL_QUESTIONS = [
-  'name', 'email', 'facts', 'spec',
+  'vacancy', 'name', 'email', 'facts', 'spec',
   'job_period', 'stress', 'honesty', 'quit_reason', 'upset_situation',
   'conflict_style', 'channel_random',
-  'hw', 'os', 'backup', 'internet', 'typing', 'night_shift'
+  'hw', 'os', 'backup', 'internet', 'typing', 'schedule', 'night_shift'
 ];
+
+// Питання що є лише для певної вакансії (виключаються для іншої)
+const SOFT_ONLY_QUESTIONS = new Set(['schedule']);       // тільки Soft Collection
+const TURBOTA_ONLY_QUESTIONS = new Set(['night_shift']); // тільки Служба турботи
 
 // Fallback — якщо конфіг недоступний, показуємо всі питання
 let activeQuestions = [...ALL_QUESTIONS];
+
+// Повертає поточну вакансію ('soft' | 'turbota' | null)
+function currentVacancy() {
+  const v = document.querySelector('input[name="vac"]:checked');
+  if (!v) return null;
+  return v.value.includes('Soft') ? 'soft' : 'turbota';
+}
+
+// Фільтрує activeQuestions з урахуванням вибраної вакансії
+function filterByVacancy(questions) {
+  const vac = currentVacancy();
+  if (!vac) return questions;
+  return questions.filter(qid => {
+    if (vac === 'soft'    && TURBOTA_ONLY_QUESTIONS.has(qid)) return false;
+    if (vac === 'turbota' && SOFT_ONLY_QUESTIONS.has(qid))    return false;
+    return true;
+  });
+}
 
 // Черга активних кроків: [0, stepEl, stepEl, ...] — 0 = welcome
 let stepQueue = [];
@@ -1449,20 +1549,20 @@ async function runSpeedTest() {
 
 // ── Build step queue from activeQuestions ──
 function buildStepQueue() {
+  const filtered = filterByVacancy(activeQuestions);
   stepQueue = [];
   stepQueue.push({ type: 'welcome', el: document.getElementById('step0') });
   let num = 1;
-  for (const qid of activeQuestions) {
+  for (const qid of filtered) {
     const el = document.getElementById('stepQ_' + qid);
     if (el) {
-      // Update badge number
       const badge = document.getElementById('badgeQ_' + qid);
       if (badge) badge.textContent = num;
       stepQueue.push({ type: 'question', qid, el });
       num++;
     }
   }
-  curIdx = 0;
+  curIdx = Math.min(curIdx, stepQueue.length - 1);
 }
 
 // ── UI update ──
@@ -1537,6 +1637,10 @@ function validateStep(step) {
   if (step.type === 'welcome') return true;
   const qid = step.qid;
 
+  if (qid === 'vacancy') {
+    const v = document.querySelector('input[name="vac"]:checked');
+    err('e_vac', !v); return !!v;
+  }
   if (qid === 'name') {
     const v = document.getElementById('q_name').value.trim();
     mark('q_name', v.length < 3); err('e_name', v.length < 3);
@@ -1670,6 +1774,10 @@ function validateStep(step) {
     const v = document.querySelector('input[name="ns"]:checked');
     err('e_ns', !v); return !!v;
   }
+  if (qid === 'schedule') {
+    const v = document.querySelector('input[name="sch"]:checked');
+    err('e_sch', !v); return !!v;
+  }
   return true;
 }
 
@@ -1681,6 +1789,7 @@ function pickRadio(lbl, name) {
   lbl.classList.add('sel');
   lbl.querySelector('input').checked = true;
   if (name === 'os') syncOsOther();
+  if (name === 'vac') { buildStepQueue(); uiSync(); }
   saveDraft();
 }
 
@@ -1776,6 +1885,8 @@ function collect() {
   const hnV  = document.querySelector('input[name="hn"]:checked');
   const csV  = document.querySelector('input[name="cs"]:checked');
   const crV  = document.querySelector('input[name="cr"]:checked');
+  const vacV = document.querySelector('input[name="vac"]:checked');
+  const schV = document.querySelector('input[name="sch"]:checked');
   const noBp = document.getElementById('noBp').checked;
 
   const ramVal = document.getElementById('q_ram').value.trim();
@@ -1810,8 +1921,14 @@ function collect() {
 
   // Only include active questions in submission
   const activeSet = new Set(activeQuestions);
-  const result = { _activeQuestions: activeQuestions };
+  const vac = currentVacancy(); // 'soft' | 'turbota' | null
 
+  // Визначаємо цільовий аркуш
+  const targetSheet = (vac === 'soft') ? 'Софт' : 'Відповіді';
+
+  const result = { _activeQuestions: activeQuestions, _sheet: targetSheet };
+
+  result.vacancy = vacV ? vacV.value : '—';
   if (activeSet.has('name'))            result.name            = document.getElementById('q_name').value.trim();
   if (activeSet.has('email'))           result.email           = document.getElementById('q_email').value.trim();
   if (activeSet.has('facts'))           result.facts           = document.getElementById('q_facts').value.trim();
@@ -1828,6 +1945,7 @@ function collect() {
   if (activeSet.has('backup'))          { result.noBackup = noBp; result.backups = backups; }
   if (activeSet.has('internet'))        result.internetSpeed   = window._speedResult || '—';
   if (activeSet.has('typing'))          result.typingSpeed     = _typingResult || '—';
+  if (activeSet.has('schedule'))        result.schedule        = schV ? schV.value : '—';
   if (activeSet.has('night_shift'))     result.nightShift      = nsV ? nsV.value : '—';
 
   // Тіньова інфо про пристрій
@@ -1854,7 +1972,7 @@ function saveDraft() {
     if (el) draft[id] = el.value;
   });
   // Radios
-  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os']].forEach(([name, key]) => {
+  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os'],['vac','vac'],['sch','sch']].forEach(([name, key]) => {
     const ch = document.querySelector('input[name="' + name + '"]:checked');
     if (ch) draft['radio_' + key] = ch.value;
   });
@@ -1901,7 +2019,7 @@ function restoreDraft() {
     }
   });
   // Radios
-  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os']].forEach(([name, key]) => {
+  [['jp','jp'],['hn','hn'],['cs','cs'],['cr','cr'],['ns','ns'],['os','os'],['vac','vac'],['sch','sch']].forEach(([name, key]) => {
     const val = draft['radio_' + key];
     if (!val) return;
     const inp = document.querySelector('input[name="' + name + '"][value="' + CSS.escape(val) + '"]');
@@ -2031,8 +2149,18 @@ async function loadConfig() {
         .map(o => o.qid);
       // Підстраховка: якщо таблиця порожня/зламана — показуємо всі
       if (activeQuestions.length === 0) activeQuestions = [...ALL_QUESTIONS];
+      // Якщо vacancy вимкнена в панелі — fallback Soft Collection:
+      // прибираємо night_shift, але залишаємо schedule
+      if (!activeQuestions.includes('vacancy')) {
+        activeQuestions = activeQuestions.filter(q => !TURBOTA_ONLY_QUESTIONS.has(q));
+        if (!activeQuestions.includes('schedule')) activeQuestions.push('schedule');
+      }
     } else {
       activeQuestions = ALL_QUESTIONS.filter(qid => json[qid] !== false);
+      if (!activeQuestions.includes('vacancy')) {
+        activeQuestions = activeQuestions.filter(q => !TURBOTA_ONLY_QUESTIONS.has(q));
+        if (!activeQuestions.includes('schedule')) activeQuestions.push('schedule');
+      }
     }
   } catch (e) {
     console.warn('Config load failed, showing all questions:', e);
@@ -2047,6 +2175,8 @@ async function loadConfig() {
   await loadConfig();
   buildStepQueue();
   restoreDraft();
+  // Після відновлення draft вакансія може бути вже обрана — перебудовуємо чергу
+  buildStepQueue();
   uiSync();
 
   // Auto-save on any input/change
