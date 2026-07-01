@@ -407,9 +407,9 @@ input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,
 .typing-word-done    { color: #2ecc71; }
 .typing-word-err     { color: #e74c3c; text-decoration: underline wavy #e74c3c; text-decoration-skip-ink: none; }
 .typing-word-current { color: #1a1a1a; }
-.typing-word-pending { color: #bbb; }
+.typing-word-pending { color: #000000; }
 .typing-ch-done      { color: #2ecc71; }
-.typing-ch-pending   { color: #bbb; }
+.typing-ch-pending   { color: #000000; }
 .typing-cursor {
   display: inline-block;
   width: 0;
@@ -1102,8 +1102,13 @@ let typingWordIdx = 0;      // поточне слово
 let typingWordPos = 0;      // позиція всередині слова
 let typingWordErr = false;  // чи є помилка у поточному слові
 
+let _lastTypingIdx = -1;
+
 function initTypingTest() {
-  currentTypingText = TYPING_TEXTS[Math.floor(Math.random() * TYPING_TEXTS.length)];
+  let idx;
+  do { idx = Math.floor(Math.random() * TYPING_TEXTS.length); } while (idx === _lastTypingIdx && TYPING_TEXTS.length > 1);
+  _lastTypingIdx = idx;
+  currentTypingText = TYPING_TEXTS[idx];
   typingWords = currentTypingText.split(' ');
   typingWordIdx = 0;
   typingWordPos = 0;
